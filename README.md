@@ -6,7 +6,7 @@
 A C++ software tool for fitting an astrophysical cosmic ray source model to combined spectrum and composition data. It was developed within the Pierre Auger Observatory project and used 
 It is distributed for research use only under the GNU General Public License v3.0.
 
-## **Credit**
+## **Credits**
 If you use CRSourceFitter for your research, please acknowledge it in your papers by citing the following references:
 
 * `S. Riggi et al., "Combined spectrum-Xmax fit with a likelihood approach", Pierre Auger Internal GAP Note 2011-101 (2011)
