@@ -15,7 +15,7 @@ INCDIR  = $(TOPDIR)/include
 OBJDIR  = $(TOPDIR)/obj
 
 USER_SRCS = $(wildcard $(SRCDIR)/*.cc)
-files := $(foreach USER_SRCS,$(SRCDIR),$(USER_SRCS))
+##files := $(foreach USER_SRCS,$(SRCDIR),$(USER_SRCS))
 
 HEADERS_DICT = $(INCDIR)/DataReader.h $(INCDIR)/PropagationMCReader.h $(INCDIR)/SourceFitter.h $(INCDIR)/DrawFitResults.h $(INCDIR)/ConfigParser.h 
 
@@ -28,6 +28,7 @@ MAIN_OBJ = $(MAIN_CRSOURCEFITTER:.cc=.o)
 LBITS   = $(shell getconf LONG_BIT)
 
 # Set executable a name
+ROOT_CLASS_DICT= ClassDictionary.cc
 SHARED_LIB = libCRSourceFitter.so
 EXE = CRSourceFitter
 #
@@ -47,12 +48,12 @@ CPPFLAGS = -I$(INCDIR)
 ifeq ($(LBITS),64)
   # do 64 bit stuff here
 	CPPFLAGS += -I/usr/include -pthread -m64
-	CXXFLAGS = -std=c++11 -O2 -Wall -Wunused -Wuninitialized -fPIC -pthread -m64 
+	CXXFLAGS = -std=c++11 -O2 -Wall -Wunused -Wuninitialized -Woverloaded-virtual -fPIC -pthread -m64 
 	SYSLIBDIR = /usr/lib/x86_64-linux-gnu
 else
   # do 32 bit stuff here
 	CPPFLAGS += -I/usr/include -pthread -m32
-  CXXFLAGS = -std=c++11 -O2 -Wall -Wunused -Wuninitialized -fPIC -pthread -m32 
+  CXXFLAGS = -std=c++11 -O2 -Wall -Wunused -Wuninitialized -Woverloaded-virtual -fPIC -pthread -m32 
 	SYSLIBDIR = /usr/lib
 endif
 
@@ -70,9 +71,8 @@ LDFLAGS = $(LDFLAGS_ROOT)
 
 ################################################################
 
+all: PRINTINFO GETOBJS $(SHARED_LIB) $(EXE) PUTOBJS
 
-#all: GETOBJS PRINTINFO $(SHARED_LIB) PUTOBJS $(EXE) PUTBINARIES PUTLIBRARIES
-all: GETOBJS PRINTINFO $(SHARED_LIB) $(EXE) PUTOBJS
 
 PRINTINFO: 
 	@echo 'Compiling $(EXE) on a $(LBITS) bit machine' \
@@ -92,27 +92,25 @@ PUTOBJS:
 	- mv -f ClassDictionary_rdict.pcm $(LIBDIR) 2>/dev/null
 	- mv -f $(EXE) $(BINDIR) 2>/dev/null
 
-PUTBINARIES:
-	@echo "Moving binary files to $(BINDIR) dir"
-	- mv -f $(EXE) $(BINDIR) 2>/dev/null
 
-PUTLIBRARIES:
-	@echo "Moving library files to $(LIBDIR) dir"
-	- mv -f $(SHARED_LIB) $(LIBDIR) 2>/dev/null
-
-ClassDictionary.cc: $(HEADERS_DICT) LinkDef.h
-	rootcint -f $@ -c -p $(CPPFLAGS) $^
+$(ROOT_CLASS_DICT): $(HEADERS_DICT) LinkDef.h
+	@echo "Generating $@ ROOT dictionary class ..."
+	rootcling -f $@ -c $(CXXFLAGS) $(CPPFLAGS) -p $^
+#	rootcint -f $@ -c -p $(CPPFLAGS) $^
 	
-$(SHARED_LIB): $(OBJS) ClassDictionary.o
-	@echo "Compiler is $(CXX) or $(CC), options are $(CXXFLAGS), generating $@ shared library..."
+$(SHARED_LIB): $(ROOT_CLASS_DICT) $(USER_SRCS)
+	@echo "Generating $@ shared library ..."
 	@$(CXX) $(CXXFLAGS) $(SOFLAGS) $(CPPFLAGS) $^ -o $@ $(LDFLAGS) 
+
+
+#$(SHARED_LIB): $(OBJS) ClassDictionary.o
+#	@echo "Generating $@ shared library ..."
+#	@$(CXX) $(CXXFLAGS) $(SOFLAGS) $(CPPFLAGS) $^ -o $@ $(LDFLAGS) 
 	
 
-$(EXE): $(MAIN_CRSOURCEFITTER_OBJ)
+$(EXE): $(MAIN_CRSOURCEFITTER) $(OBJS) ClassDictionary.o $(MAIN_CRSOURCEFITTER_OBJ)
 	@echo "Building CRSourceFitter ..."
-	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(MAIN_CRSOURCEFITTER) $(LDFLAGS) -L$(TOPDIR) -lCRSourceFitter
-#@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(MAIN_CRSOURCEFITTER) $(LDFLAGS) -L$(LIBDIR) -lCRSourceFitter
-
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) -L$(TOPDIR) -lCRSourceFitter
 
 #############################################################
 # gcc can generate the dependency list
@@ -146,4 +144,4 @@ gdb.cmdl:
 run_gdb: gdb.cmdl $(EXE)
 	gdb -batch -x $< ./$(EXE) && touch $@
 
-#include Make-depend
+include Make-depend

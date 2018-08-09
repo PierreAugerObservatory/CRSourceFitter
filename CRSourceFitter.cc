@@ -104,7 +104,7 @@ double XmaxLikelihoodWeight;
 void usage() {
   cout<<endl;
 	cout<<"*** PROGRAM USAGE ***"<<endl;
-	cout<<"CRSourceFitter2 --[runmode] --config=[path-to-configfile] --input=[path-to-inputfile]"<<endl;
+	cout<<"CRSourceFitter --[runmode] --config=[path-to-configfile] --input=[path-to-inputfile]"<<endl;
 	cout<<"  [runmode]"<<endl;
 	cout<<"      sourcefit: run source composition fit"<<endl;
 	cout<<"      draw: draw fitted results"<<endl;
@@ -218,8 +218,7 @@ void Draw(){
   theDrawer.SetNumberOfComponents(Nmass);
   theDrawer.SetDataFileName(inputFileName.c_str());
 	theDrawer.SetOutputFileName("Plot.root");	
-
-	theDrawer.Draw();
+	theDrawer.MakePlots();
 
 }//close Draw()
 
