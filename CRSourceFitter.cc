@@ -104,7 +104,7 @@ double XmaxLikelihoodWeight;
 void usage() {
   cout<<endl;
 	cout<<"*** PROGRAM USAGE ***"<<endl;
-	cout<<"CompositionFitter --[runmode] --config=[path-to-configfile] --input=[path-to-inputfile]"<<endl;
+	cout<<"CRSourceFitter2 --[runmode] --config=[path-to-configfile] --input=[path-to-inputfile]"<<endl;
 	cout<<"  [runmode]"<<endl;
 	cout<<"      sourcefit: run source composition fit"<<endl;
 	cout<<"      draw: draw fitted results"<<endl;
