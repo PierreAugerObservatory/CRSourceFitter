@@ -1,10 +1,10 @@
-# CRSourceFitter
-A C++ software tool for fitting an astrophysical cosmic ray source model to combined spectrum and composition data. It was developed within the Pierre Auger Observatory project and used 
-It is distributed for research use only under the GNU General Public License v3.0.
-
 <p align="left">
   <img src="share/CRSourceFitterLogo.png" alt="CRSourceFitter sample outputs"/>
 </p>
+
+# CRSourceFitter
+A C++ software tool for fitting an astrophysical cosmic ray source model to combined spectrum and composition data. It was developed within the Pierre Auger Observatory project and used 
+It is distributed for research use only under the GNU General Public License v3.0.
 
 ## **Credit**
 If you use CRSourceFitter for your research, please acknowledge it in your papers by citing the following references:
@@ -40,7 +40,7 @@ To build the project:
 Binaries will be placed in the bin/ directory and libraries in the lib/ directory.
 
 ### **Usage**
-```CRSourceFitter --[runmode] --config=[path-to-configfile] --input=[path-to-inputfile]```    
-      ```[runmode]```    
-            ```sourcefit: run source composition fit```    
-            ```draw: draw fitted results```    
+* ```CRSourceFitter --[runmode] --config=[path-to-configfile] --input=[path-to-inputfile]```    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```[runmode]```    
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```sourcefit: run source composition fit```    
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```draw: draw fitted results```    
