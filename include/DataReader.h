@@ -72,7 +72,7 @@ class DataReader : public TObject {
  		* \brief Get list of MC energy histograms
  		*/
 		std::vector<TH1D*> GetEnergyMC(int mcComponent) { 
-			if(mcComponent>=0 && mcComponent<fEnergyMC_fit.size()) 
+			if(mcComponent>=0 && mcComponent<(int)(fEnergyMC_fit.size())) 
 				return fEnergyMC_fit[mcComponent];
 			else{
 				std::string errMsg = "DataReader::GetEnergyMC(): Error, requested index exceeds vector size...exit!";
@@ -80,7 +80,7 @@ class DataReader : public TObject {
 			}	
 		}
 		std::vector<TH1D*> GetGenEnergyMC(int mcComponent) { 
-			if(mcComponent>=0 && mcComponent<fGenEnergyMC_fit.size()) 
+			if(mcComponent>=0 && mcComponent<(int)(fGenEnergyMC_fit.size())) 
 				return fGenEnergyMC_fit[mcComponent];
 			else{
 				std::string errMsg = "DataReader::GetGenEnergyMC(): Error, requested index exceeds vector size...exit!";
@@ -92,7 +92,7 @@ class DataReader : public TObject {
  		* \brief Get list of MC Xmax histograms
  		*/
 		std::vector<TH1D*> GetXmaxMC(int mcComponent) { 
-			if(mcComponent>=0 && mcComponent<fXmaxMC_fit.size()) 
+			if(mcComponent>=0 && mcComponent<(int)(fXmaxMC_fit.size())) 
 				return fXmaxMC_fit[mcComponent];
 			else{
 				std::string errMsg = "DataReader::GetXmaxMC(): Error, requested index exceeds vector size...exit!";
@@ -100,7 +100,7 @@ class DataReader : public TObject {
 			}	
 		}
 		std::vector<TH1D*> GetGenXmaxMC(int mcComponent) { 
-			if(mcComponent>=0 && mcComponent<fGenXmaxMC_fit.size()) 
+			if(mcComponent>=0 && mcComponent<(int)(fGenXmaxMC_fit.size())) 
 				return fGenXmaxMC_fit[mcComponent];
 			else{
 				std::string errMsg = "DataReader::GetGenXmaxMC(): Error, requested index exceeds vector size...exit!";

@@ -49,10 +49,12 @@ class ConfigParser : public TObject {
 		\brief Check integrity of parsed information
  		*/
 		bool Check();
+
+		
 		/** 
 		\brief Print parsed information
  		*/
-		void Dump();
+		void PrintConfig();
 
 	public:	
 

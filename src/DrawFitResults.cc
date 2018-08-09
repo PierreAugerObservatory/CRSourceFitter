@@ -144,7 +144,7 @@ void DrawFitResults::Init(){
 }//close destructor
 
 
-void DrawFitResults::Draw(){
+void DrawFitResults::MakePlots(){
 
 	cout<<"DrawFitResults::Draw()"<<endl;
 	Init();//open input file

@@ -36,10 +36,11 @@ class DrawFitResults : public TObject {
 		virtual ~DrawFitResults();
 
 	public:
+		
 		/** 
 		\brief Draw all
  		*/
-		void Draw();
+		void MakePlots();
 
 		/**
 		* \brief Set the number of mass components to be drawn

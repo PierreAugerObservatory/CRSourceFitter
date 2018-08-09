@@ -385,7 +385,7 @@ bool ConfigParser::Check(){
 }//close ConfigParser::Check()
 
 
-void ConfigParser::Dump(){
+void ConfigParser::PrintConfig(){
 
 	//print parsed information
 	cout<<"#############################"<<endl;
@@ -421,7 +421,6 @@ void ConfigParser::Dump(){
 	cout<<"FixCutoffShape? "<<fFixSourceCutoffShape<<endl;
 	cout<<"WeightLikelihood? "<<fWeightLikelihood<<"  WSpectrum="<<fXmaxLikelihoodWeight<<"  WXmax="<<fXmaxLikelihoodWeight<<endl;
 
-
-}//close ConfigParser::Dump()
+}//close PrintConfig()
 
 }//close namespace
