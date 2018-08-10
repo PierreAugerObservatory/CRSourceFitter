@@ -3,7 +3,7 @@
 </p>
 
 # CRSourceFitter
-A C++ software tool for fitting an astrophysical cosmic ray source model to combined spectrum and composition data. It was developed within the Pierre Auger Observatory project and used 
+A C++ software tool for fitting an astrophysical cosmic ray source model to combined spectrum and composition data. It was developed within the Pierre Auger Observatory project and used in the Auger composition-spectrum interpretation paper.
 It is distributed for research use only under the GNU General Public License v3.0.
 
 ## **Credits**
