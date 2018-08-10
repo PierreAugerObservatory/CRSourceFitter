@@ -40,7 +40,7 @@ To build the project:
 Binaries will be placed in the bin/ directory and libraries in the lib/ directory.
 
 ### **Usage**
-* ```CRSourceFitter --[runmode] --config=[path-to-configfile] --input=[path-to-inputfile]```    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```[runmode]```    
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```sourcefit: run source composition fit```    
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```draw: draw fitted results```    
+* ```CRSourceFitter [--config=[path-to-configfile]] [--draw] [--input=[path-to-inputfile]]```    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```--config=[path-to-configfile] - Configuration file name with source fit run options```    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```--input=[path-to-inputfile] -  Input file name (.root) containing fit info to be drawn```   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```--draw - Draw fitted results instead of running source fit```    
