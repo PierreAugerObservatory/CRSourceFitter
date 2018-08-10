@@ -21,7 +21,7 @@ HEADERS_DICT = $(INCDIR)/DataReader.h $(INCDIR)/PropagationMCReader.h $(INCDIR)/
 
 OBJS = $(USER_SRCS:.cc=.o)
 
-MAIN_CRSOURCEFITTER = CRSourceFitter.cc
+MAIN_SRC = CRSourceFitter.cc
 MAIN_OBJ = $(MAIN_CRSOURCEFITTER:.cc=.o)
 
 ## Get platform 32/64 bit
@@ -108,7 +108,8 @@ $(SHARED_LIB): $(ROOT_CLASS_DICT) $(USER_SRCS)
 #	@$(CXX) $(CXXFLAGS) $(SOFLAGS) $(CPPFLAGS) $^ -o $@ $(LDFLAGS) 
 	
 
-$(EXE): $(MAIN_CRSOURCEFITTER) $(OBJS) ClassDictionary.o $(MAIN_CRSOURCEFITTER_OBJ)
+#$(EXE): $(MAIN_SRC) $(OBJS) ClassDictionary.o $(MAIN_CRSOURCEFITTER_OBJ)
+$(EXE): $(MAIN_SRC) $(OBJS) ClassDictionary.o
 	@echo "Building CRSourceFitter ..."
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) -L$(TOPDIR) -lCRSourceFitter
 

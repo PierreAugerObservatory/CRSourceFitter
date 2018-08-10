@@ -77,7 +77,7 @@ As utilities the Drawer class plus some other ROOT macros are provided to draw t
 #include <stdio.h>
 #include <string>
 #include <stdexcept>
-
+#include <getopt.h>
 
 using namespace std;
 
@@ -87,8 +87,8 @@ std::string DataFileName;
 std::string MCFileName;
 std::string MCPropFileName;
 std::string OutputFileName;
-std::string configFileName;
-std::string inputFileName;
+std::string configFileName= "";
+std::string inputFileName= "";
 
 
 //Source params
@@ -118,98 +118,128 @@ bool WeightLikelihood;
 double SpectrumLikelihoodWeight;
 double XmaxLikelihoodWeight;
 
-void usage() {
-  cout<<endl;
-	cout<<"*** PROGRAM USAGE ***"<<endl;
-	cout<<"CRSourceFitter --[runmode] --config=[path-to-configfile] --input=[path-to-inputfile]"<<endl;
-	cout<<"  [runmode]"<<endl;
-	cout<<"      sourcefit: run source composition fit"<<endl;
-	cout<<"      draw: draw fitted results"<<endl;
-	cout<<"**********************"<<endl;
-} //close usage() 
-
 void DoSourceFit();
 void Draw();
 
-int main(int argc, char **argv) {
+void Usage(char* exeName){
+	cout<<"=========== USAGE ==========="<<endl;
+	cout<<"Usage: "<<exeName<<" [options]"<<endl;
+	cout<<endl;
+	cout<<"Options:"<<endl;
+  cout<<"-h, --help \t Show help message and exit"<<endl;
+	cout<<"-c, --config=[CONFIG FILENAME] \t Configuration file name with source fit run options"<<endl;
+	cout<<"-i, --input=[INPUT FILENAME] \t Input file name (.root) containing fit info to be drawn"<<endl;
+	cout<<"-d, --draw \t Draw fitted results instead of running source fit"<<endl;
+	cout<<"=============================="<<endl;
+}
 
-	if(argc<3){
+static const struct option options_tab[] = {
+  /* name, has_arg, &flag, val */
+  { "help", no_argument, 0, 'h' },
+	{ "input", required_argument, 0, 'i' },
+	{ "config", required_argument, 0, 'c' },
+	{ "draw", no_argument, 0, 'd' },
+  {(char*)0, (int)0, (int*)0, (int)0}
+};
+
+
+int main(int argc, char **argv) 
+{
+	//====================================================
+	//==         PARSE ARGS
+	//=====================================================
+	//## Check args
+	if(argc<2){
 		cout<<endl;
-		cerr<< "ERROR: Incorrect number of arguments...see program usage"<<endl;
-		usage();		
+		cerr<< "ERROR: Incorrect number of arguments...see program usage!"<<endl;
+		Usage(argv[0]);		
 		exit(1);
 	}
+
+	//## Get command args
+	int c = 0;
+  int option_index = 0;
+	bool runFit= true;
+
+	while((c = getopt_long(argc, argv, "hi:c:d",options_tab, &option_index)) != -1) {
+    
+    switch (c) {
+			case 0 : 
+			{
+				break;
+			}
+			case 'h':
+			{
+      	Usage(argv[0]);	
+				exit(0);
+			}
+    	case 'i':	
+			{
+				inputFileName= std::string(optarg);	
+				break;	
+			}
+			case 'c':	
+			{
+				configFileName= std::string(optarg);	
+				break;	
+			}
+			case 'd':	
+			{
+				runFit= false;
+				break;	
+			}
+    	default:
+			{
+      	Usage(argv[0]);	
+				exit(0);
+			}
+    }//close switch
+	}//close while
 	
-	//## handle arguments
-	std::string config_arg_format="--config=";
-	configFileName="";
-
-	//get path of config macro
-	if(!strstr(argv[2],config_arg_format.c_str())){
-		//mistake in giving the config argument 
-		std::string errMsg = "ERROR: Give the config argument in form --config=[path-to-configmacro]";
-    throw std::runtime_error(errMsg);	
-		exit(1);
-	}
-	else{
-		//config argument specified correctly => get the file
-		std::string config_arg= string(argv[2]);
-		int readpos = config_arg.find("="); 
-		configFileName = config_arg.substr(readpos+1);// get from "--config=" to the end
-		//cout<<"INFO: Read settings from config file "<<configFileName<<endl;
-	}
-
-	
-	//## parsing info
-	CRSourceFitter_ns::ConfigParser* theConfigParser= new CRSourceFitter_ns::ConfigParser(configFileName.c_str());
-	theConfigParser->SetVerbosity(1);
-	theConfigParser->ReadConfig();
-
-	
-	//## handle --input arguments
-	if(argv[3]!=NULL){
-		std::string input_arg_format="--input=";
-		inputFileName="";
-
-		//get path of config macro
-		if(!strstr(argv[3],input_arg_format.c_str())){
-			//mistake when giving the config argument 
-			std::string errMsg = "ERROR: Give the config argument in form --input=[path-to-inputfile] ###";
-    	throw std::runtime_error(errMsg);	
+	//====================================================
+	//==         CHECK ARGS
+	//=====================================================
+	CRSourceFitter_ns::ConfigParser* parser= nullptr;
+	if(runFit){
+		//Check config file name given
+		if(configFileName==""){
+			cerr<<"ERROR: Empty configuration filename given!"<<endl;
 			exit(1);
 		}
-		else{
-			//input argument specified correctly => get the file
-			std::string input_arg= string(argv[3]);
-			int readpos = input_arg.find("="); 
-			inputFileName = input_arg.substr(readpos+1);// get from "--input=" to the end
-			cout<<"INFO: Drawing fit info from file "<<inputFileName<<endl;
+
+		//Parsing info
+		parser= new CRSourceFitter_ns::ConfigParser(configFileName.c_str());
+		if(!parser){
+			cerr<<"ERROR: Failed to create parser or to read config file "<<configFileName<<"!"<<endl;
+			exit(1);
 		}
+		parser->SetVerbosity(1);
+		parser->ReadConfig();
 	}//close if
-	
-	cout<<"get run mode"<<endl;
-	//## get run mode
-	if(strcmp(argv[1],"--fit")==0) {	
+	else{
+		if(inputFileName==""){
+			cerr<<"ERROR: Empty input filename given!"<<endl;
+			exit(1);
+		}
+	}	
+
+
+	//====================================================
+	//==         RUN FIT/DRAW
+	//=====================================================
+	if(runFit){
 		cout<<"************************************"<<endl;
 		cout<<"** SOURCE FITTING                ***"<<endl;
 		cout<<"************************************"<<endl;
 		DoSourceFit();
 	}
-	
-	else if(strcmp(argv[1],"--draw")==0){
+	else{
 		cout<<"************************************"<<endl;
 		cout<<"** DRAWING                       ***"<<endl;
 		cout<<"************************************"<<endl;
 		Draw();
-	}	
-	else{
-		//mistake in giving the run mode argument
-		std::string errMsg = "ERROR: Execution mode " + string(argv[1])
-      + " not defined!";
-    throw std::runtime_error(errMsg);	 
-		exit(1);
-	}  
-  
+	}
+
   return 0;
   
 }//close main
